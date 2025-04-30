@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
-  <Id>b62d7ccf-e056-48b3-81cc-f014f2441dd8</Id>
+  <Id>c8eb9818-d033-4f0b-8717-48b1fedf2095</Id>
   <Version>1.0.0.0</Version>
   <ProviderName>Contoso</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="office_react_test"/>
+  <DisplayName DefaultValue="FoxChat"/>
   <Description DefaultValue="A template to get started."/>
   <IconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-128.png"/>
@@ -17,7 +17,7 @@
   </Hosts>
   <Requirements>
     <Sets>
-      <Set Name="Mailbox" MinVersion="1.1"/>
+      <Set Name="Mailbox" MinVersion="1.3"/>
     </Sets>
   </Requirements>
   <FormSettings>
@@ -28,10 +28,13 @@
       </DesktopSettings>
     </Form>
   </FormSettings>
-  <Permissions>ReadWriteItem</Permissions>
+  <!-- Change thepermisson wisely: https://learn.microsoft.com/en-us/office/dev/add-ins/outlook/privacy-and-security -->
+  <!-- <Permissions>ReadWriteItem</Permissions> -->
+  <Permissions>ReadWriteMailbox</Permissions>
   <Rule xsi:type="RuleCollection" Mode="Or">
     <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
   </Rule>
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
     <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
       <Requirements>
@@ -43,11 +46,11 @@
         <Host xsi:type="MailHost">
           <DesktopFormFactor>
             <FunctionFile resid="Commands.Url"/>
-            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+            <ExtensionPoint xsi:type="MessageReadCommandSurface">
               <OfficeTab id="TabDefault">
-                <Group id="msgComposeGroup">
+                <Group id="msgReadGroup">
                   <Label resid="GroupLabel"/>
-                  <Control xsi:type="Button" id="msgComposeOpenPaneButton">
+                  <Control xsi:type="Button" id="msgReadOpenPaneButton">
                     <Label resid="TaskpaneButton.Label"/>
                     <Supertip>
                       <Title resid="TaskpaneButton.Label"/>
@@ -59,7 +62,12 @@
                       <bt:Image size="80" resid="Icon.80x80"/>
                     </Icon>
                     <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="Taskpane.Url"/>
+                      <SourceLocation resid="Chat.Url"/>
+                      <!-- Enables your add-in to activate without the Reading Pane enabled or a message selected. -->
+                      <!-- Not for New Outlook or Outlook Web-->
+                      <!-- <SupportsNoItemContext>true</SupportsNoItemContext> -->
+                      <!-- Support for pinning so the task pane won't disappear-->
+                      <SupportsPinning>true</SupportsPinning>
                     </Action>
                   </Control>
                   <Control xsi:type="Button" id="ActionButton">
@@ -80,6 +88,9 @@
                 </Group>
               </OfficeTab>
             </ExtensionPoint>
+            <!-- <ExtensionPoint xsi:type="LaunchEvent">
+              <SourceLocation resid="Taskpane.Url" />
+            </ExtensionPoint> -->
           </DesktopFormFactor>
         </Host>
       </Hosts>
@@ -91,7 +102,8 @@
         </bt:Images>
         <bt:Urls>
           <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html"/>
-          <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
+          <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>`
+          <bt:Url id="Chat.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="GroupLabel" DefaultValue="Contoso Add-in"/>
@@ -99,7 +111,7 @@
           <bt:String id="ActionButton.Label" DefaultValue="Perform an action"/>
         </bt:ShortStrings>
         <bt:LongStrings>
-          <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens a pane that enables users to insert text."/>
+          <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens a pane displaying all available properties."/>
           <bt:String id="ActionButton.Tooltip" DefaultValue="Perform an action when clicked."/>
         </bt:LongStrings>
       </Resources>
