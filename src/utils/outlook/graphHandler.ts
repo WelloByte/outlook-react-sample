@@ -2,7 +2,7 @@
 import { Client } from "@microsoft/microsoft-graph-client";
 // install by executing: npm install @microsoft/microsoft-graph-client
 
-import { AccountManager } from "../utils/authConfig";
+import { AccountManager } from "../authConfig";
 //import { makeGraphRequest } from "./msgraph-helper";
 import { parseReply } from "parse-reply";
 
